@@ -8,7 +8,9 @@ description: "Task list template for feature implementation"
 **Input**: Design documents from `/specs/[###-feature-name]/`
 **Prerequisites**: plan.md (required), spec.md (required for user stories), research.md, data-model.md, contracts/
 
-**Tests**: Test tasks are MANDATORY per constitution principle "測試標準". Tests must be written FIRST (test-first development) and must fail before implementation begins.
+**Note**: This tasks.md MUST be written in Traditional Chinese (zh-TW) per constitution principle V.
+
+**Tests**: Test tasks are MANDATORY per constitution principle "Testing Standards". Tests must be written FIRST (test-first development) and must fail before implementation begins.
 
 **Organization**: Tasks are grouped by user story to enable independent implementation and testing of each story.
 

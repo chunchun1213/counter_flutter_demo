@@ -5,6 +5,8 @@
 **Status**: Draft  
 **Input**: User description: "$ARGUMENTS"
 
+**Note**: This specification MUST be written in Traditional Chinese (zh-TW) per constitution principle V.
+
 ## User Scenarios & Testing *(mandatory)*
 
 <!--

@@ -34,10 +34,11 @@
 [Gates determined based on constitution file at `.specify/memory/constitution.md`]
 
 **Required Checks** (based on current constitution):
-- ✅ 程式碼品質: Static analysis configured, code review process defined
-- ✅ 測試標準: Test-first approach planned, test pyramid structure defined (unit/widget/integration)
-- ✅ 使用者體驗一致性: Design system references included, accessibility considerations documented
-- ✅ 效能需求: Performance budgets defined (startup time, FPS, memory, network)
+- ✅ Code Quality: Static analysis configured, code review process defined
+- ✅ Testing Standards: Test-first approach planned, test pyramid structure defined (unit/widget/integration)
+- ✅ User Experience Consistency: Design system references included, accessibility considerations documented
+- ✅ Performance Requirements: Performance budgets defined (startup time, FPS, memory, network)
+- ✅ Documentation Language: This plan.md is written in Traditional Chinese (zh-TW) per constitution principle V
 
 **Violations requiring justification** → See Complexity Tracking section below
 
