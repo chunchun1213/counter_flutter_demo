@@ -9,6 +9,16 @@
 
 ---
 
+## Clarifications
+
+### Session 2025-11-21
+
+- Q: 當計數器達到 Dart int 最大值（2^63 - 1）時，系統應該如何處理？ → A: 保持在最大值，按鈕禁用，不再遞增
+- Q: 使用者在極短時間內（如 100ms 內）多次點擊按鈕時，系統應如何處理？ → A: 全部註冊，每次點擊都使計數遞增（無防抖）
+- Q: 當使用者將應用程式最小化到背景（未完全關閉），然後再次開啟時，計數器狀態應該？ → A: 重置為 0，每次從背景恢復都視為新開始
+
+---
+
 ## 使用者場景與測試 *(必填)*
 
 ### 使用者故事 1 - 檢視初始計數 (優先級: P1) 🎯 MVP
@@ -44,11 +54,41 @@
 
 ---
 
+### 使用者故事 3 - 計數器達到上限行為 (優先級: P2)
+
+當計數器達到系統最大值時，使用者看到按鈕被禁用，了解無法繼續遞增。
+
+**為什麼是此優先級**: 這是邊界情況處理，確保系統穩定性，但在實際使用中極少發生（需點擊 92 億億次）。
+
+**獨立測試**: 設定計數器為最大值減 1，點擊按鈕一次，驗證按鈕變為禁用狀態且不再響應點擊。
+
+**驗收場景**:
+
+1. **Given** 計數器顯示 9,223,372,036,854,775,806（最大值 - 1），**When** 使用者點擊加號按鈕，**Then** 計數器顯示 9,223,372,036,854,775,807 且加號按鈕變為禁用狀態
+2. **Given** 計數器已達最大值且按鈕已禁用，**When** 使用者嘗試點擊按鈕，**Then** 計數器保持不變且無任何反應
+
+---
+
+### 使用者故事 4 - 背景恢復行為 (優先級: P2)
+
+使用者將應用程式最小化後再次開啟，看到計數器重置為 0，了解這是新的計數會話。
+
+**為什麼是此優先級**: 這是應用程式生命週期管理，確保使用者對狀態重置的預期清晰。
+
+**獨立測試**: 設定計數器為任意值，將應用程式最小化到背景，再次開啟，驗證計數器顯示 0。
+
+**驗收場景**:
+
+1. **Given** 計數器顯示任意數字 N（N > 0），**When** 使用者將應用程式最小化到背景後再次開啟，**Then** 計數器顯示 0
+2. **Given** 應用程式在前景運行，**When** 使用者切換到其他應用後立即返回（應用程式仍在記憶體中），**Then** 計數器重置為 0
+
+---
+
 ### 邊界情況
 
-- 計數器數值達到 Flutter int 最大值時會如何處理？（需要考慮是否需要上限或溢位處理）
-- 快速連續點擊按鈕時，是否每次點擊都正確註冊？
-- 應用程式在背景時，計數狀態是否需要保留？（目前設計為暫態，不保留）
+- **計數器溢位**：當計數器達到 Dart int 最大值（2^63 - 1 = 9,223,372,036,854,775,807）時，系統保持在最大值，加號按鈕自動禁用（視覺上變為灰色且無法點擊），確保不會發生溢位錯誤
+- **快速連續點擊**：系統註冊所有點擊事件，無防抖（debounce）或節流（throttle）限制。每次點擊都會使計數器遞增 1，確保使用者的每個操作都被正確記錄
+- **背景狀態處理**：當應用程式被最小化到背景後再次開啟時，計數器重置為 0。這是暫態設計，狀態僅在應用程式前景時保留，不持久化儲存
 
 ---
 
@@ -65,6 +105,9 @@
 - **FR-007**: 計數器文字 MUST 使用清晰易讀的大字體（72px）和深色（#101727）
 - **FR-008**: 加號按鈕 MUST 使用深色背景（#030213）和白色加號圖示
 - **FR-009**: 加號按鈕 MUST 為圓形，提供足夠的點擊區域（約 64px 直徑）
+- **FR-010**: 系統 MUST 在計數器達到 Dart int 最大值時禁用加號按鈕，防止溢位
+- **FR-011**: 系統 MUST 註冊所有點擊事件，不實作防抖或節流機制
+- **FR-012**: 系統 MUST 在應用程式從背景恢復時重置計數器為 0
 
 ### 關鍵實體
 
@@ -80,9 +123,11 @@
 
 **測試標準** (依據憲章):
 - **NFR-003**: 單元測試覆蓋率 MUST ≥80% 針對新增程式碼
-- **NFR-004**: P1 使用者故事 MUST 具備整合測試（Widget 測試）
+- **NFR-004**: P1 和 P2 使用者故事 MUST 具備整合測試（Widget 測試）
 - **NFR-005**: 計數器狀態管理邏輯 MUST 具備單元測試
 - **NFR-006**: 按鈕點擊行為 MUST 具備 Widget 測試驗證
+- **NFR-007a**: 計數器溢位處理 MUST 具備單元測試和 Widget 測試
+- **NFR-007b**: 背景恢復行為 MUST 具備生命週期測試
 
 **使用者體驗一致性** (依據憲章):
 - **NFR-007**: UI MUST 遵循 Material Design 設計規範
@@ -105,9 +150,11 @@
 - **SC-001**: 使用者能在 1 秒內理解應用程式功能（顯示計數器和加號按鈕）
 - **SC-002**: 使用者點擊按鈕後，計數器 MUST 在 16ms 內更新顯示（60 FPS）
 - **SC-003**: 自動化測試 MUST 能夠精確定位並操作所有 UI 元件，成功率 100%
-- **SC-004**: 應用程式 MUST 支援連續點擊 100 次而無延遲或錯誤
-- **SC-005**: Widget 測試覆蓋率 MUST 達到 100%（涵蓋所有使用者故事）
+- **SC-004**: 應用程式 MUST 支援連續點擊 100 次而無延遲或錯誤，所有點擊都被正確註冊
+- **SC-005**: Widget 測試覆蓋率 MUST 達到 100%（涵蓋所有使用者故事，包含 P1 和 P2）
 - **SC-006**: 應用程式在低階設備（2GB RAM）上 MUST 流暢運行（60 FPS）
+- **SC-007**: 計數器達到最大值時，按鈕 MUST 在 16ms 內禁用，提供清晰的視覺回饋
+- **SC-008**: 應用程式從背景恢復時，MUST 在 500ms 內完成狀態重置並顯示初始畫面
 
 ---
 
@@ -661,6 +708,55 @@ testWidgets('連續點擊三次應顯示 3', (WidgetTester tester) async {
   
   expect(find.text('3'), findsOneWidget);
 });
+
+testWidgets('達到最大值時按鈕應禁用', (WidgetTester tester) async {
+  await tester.pumpWidget(const MyApp());
+  
+  // 設定計數器為最大值 - 1（測試環境中模擬）
+  // 點擊使其達到最大值
+  await tester.tap(find.byKey(const Key('plus_button')));
+  await tester.pump();
+  
+  // 驗證按鈕被禁用
+  final button = tester.widget<FloatingActionButton>(
+    find.byKey(const Key('plus_button'))
+  );
+  expect(button.onPressed, isNull); // 禁用的按鈕 onPressed 為 null
+});
+
+testWidgets('快速連續點擊應全部註冊', (WidgetTester tester) async {
+  await tester.pumpWidget(const MyApp());
+  
+  final button = find.byKey(const Key('plus_button'));
+  
+  // 快速點擊 5 次（無延遲）
+  for (int i = 0; i < 5; i++) {
+    await tester.tap(button);
+  }
+  await tester.pump();
+  
+  // 驗證所有點擊都被註冊
+  expect(find.text('5'), findsOneWidget);
+});
+
+testWidgets('從背景恢復後計數器重置', (WidgetTester tester) async {
+  await tester.pumpWidget(const MyApp());
+  
+  // 點擊增加計數
+  await tester.tap(find.byKey(const Key('plus_button')));
+  await tester.pump();
+  expect(find.text('1'), findsOneWidget);
+  
+  // 模擬應用程式進入背景並恢復
+  tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+  await tester.pump();
+  tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+  await tester.pump();
+  
+  // 驗證計數器重置為 0
+  expect(find.text('0'), findsOneWidget);
+  expect(find.text('1'), findsNothing);
+});
 ```
 
 ### 無障礙測試
@@ -698,19 +794,22 @@ testWidgets('應提供正確的 Semantics 標籤', (WidgetTester tester) async {
 ### 假設
 
 - 使用者裝置支援 Flutter 的最低系統需求
-- 計數值不需要持久化儲存（應用程式重啟後重置為 0）
-- 計數值不會超過 Dart int 的最大值（2^63 - 1）
+- 計數值不需要持久化儲存（應用程式完全重啟後重置為 0）
+- 計數值可能達到 Dart int 的最大值（2^63 - 1），系統需處理此邊界情況
 - 使用者具備基本的觸控操作能力
 - 應用程式僅需支援直向模式（portrait）
+- 使用者期望每次點擊都被註冊，不接受防抖或節流行為
+- 使用者接受應用程式從背景恢復時狀態重置為 0（暫態設計）
 
 ### 限制
 
 - 當前版本不支援計數減少功能
-- 當前版本不支援計數重置功能
-- 計數值不保存到本地儲存或雲端
+- 當前版本不支援手動重置功能（僅背景恢復時自動重置）
+- 計數值不保存到本地儲存或雲端（純記憶體狀態）
 - 不支援多使用者或多計數器
 - 不支援橫向模式（landscape）
 - 不支援深色模式（dark mode）主題切換
+- 計數器達到最大值後，僅能透過應用程式重啟或背景恢復來重置
 
 ---
 
