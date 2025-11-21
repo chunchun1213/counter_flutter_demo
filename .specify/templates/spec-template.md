@@ -100,6 +100,27 @@
 - **[Entity 1]**: [What it represents, key attributes without implementation]
 - **[Entity 2]**: [What it represents, relationships to other entities]
 
+### Non-Functional Requirements *(constitution-driven)*
+
+**Code Quality** (per constitution):
+- **NFR-001**: All code MUST pass `flutter analyze` with zero warnings
+- **NFR-002**: All code MUST be formatted with `dart format`
+
+**Testing** (per constitution):
+- **NFR-003**: Unit test coverage MUST be ≥80% for new code
+- **NFR-004**: All P1 user stories MUST have integration tests
+
+**User Experience** (per constitution):
+- **NFR-005**: UI MUST follow [Material Design / Cupertino / Custom Design System]
+- **NFR-006**: UI MUST support accessibility (screen readers, keyboard navigation)
+- **NFR-007**: User actions MUST provide immediate feedback
+
+**Performance** (per constitution):
+- **NFR-008**: Cold start MUST complete in <3s, hot start in <1s
+- **NFR-009**: All animations MUST maintain 60 FPS
+- **NFR-010**: Page memory usage MUST be <150MB
+- **NFR-011**: [Add feature-specific performance requirements]
+
 ## Success Criteria *(mandatory)*
 
 <!--

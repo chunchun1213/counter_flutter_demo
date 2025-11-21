@@ -31,7 +31,15 @@
 
 *GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
 
-[Gates determined based on constitution file]
+[Gates determined based on constitution file at `.specify/memory/constitution.md`]
+
+**Required Checks** (based on current constitution):
+- ✅ 程式碼品質: Static analysis configured, code review process defined
+- ✅ 測試標準: Test-first approach planned, test pyramid structure defined (unit/widget/integration)
+- ✅ 使用者體驗一致性: Design system references included, accessibility considerations documented
+- ✅ 效能需求: Performance budgets defined (startup time, FPS, memory, network)
+
+**Violations requiring justification** → See Complexity Tracking section below
 
 ## Project Structure
 

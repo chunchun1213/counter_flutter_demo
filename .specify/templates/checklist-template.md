@@ -20,17 +20,52 @@
   ============================================================================
 -->
 
-## [Category 1]
+## 程式碼品質 (Constitution: Principle I)
 
-- [ ] CHK001 First checklist item with clear action
-- [ ] CHK002 Second checklist item
-- [ ] CHK003 Third checklist item
+- [ ] CHK001 執行 `flutter analyze` 並確認零警告零錯誤
+- [ ] CHK002 執行 `dart format --set-exit-if-changed .` 確認格式化一致
+- [ ] CHK003 程式碼使用有意義的命名（類別、函式、變數）
+- [ ] CHK004 複雜邏輯包含適當的註解說明
+- [ ] CHK005 依賴性使用建構函式注入或服務定位器
+- [ ] CHK006 每個類別/函式符合單一職責原則
+- [ ] CHK007 至少一位團隊成員完成程式碼審查
 
-## [Category 2]
+## 測試標準 (Constitution: Principle II)
 
-- [ ] CHK004 Another category item
-- [ ] CHK005 Item with specific criteria
-- [ ] CHK006 Final item in this category
+- [ ] CHK008 單元測試覆蓋率 ≥80% (執行 `flutter test --coverage` 確認)
+- [ ] CHK009 所有業務邏輯有單元測試
+- [ ] CHK010 關鍵 Widget 有元件測試（widget tests）
+- [ ] CHK011 P1 使用者故事有整合測試（integration tests）
+- [ ] CHK012 所有測試可重複執行且不依賴外部狀態
+- [ ] CHK013 單元測試套件在 30 秒內完成
+- [ ] CHK014 外部依賴（網路、資料庫）已使用 mock
+
+## 使用者體驗一致性 (Constitution: Principle III)
+
+- [ ] CHK015 UI 遵循設計系統（顏色、字型、間距、圓角）
+- [ ] CHK016 遵循平台慣例（Material Design / Cupertino）
+- [ ] CHK017 介面支援不同螢幕尺寸（手機、平板）
+- [ ] CHK018 提供 Semantics 標籤支援無障礙
+- [ ] CHK019 使用者操作有即時視覺回饋（載入、狀態變化）
+- [ ] CHK020 錯誤訊息清晰且可操作，避免技術術語
+
+## 效能需求 (Constitution: Principle IV)
+
+- [ ] CHK021 測試冷啟動時間 <3 秒（使用 DevTools Timeline）
+- [ ] CHK022 測試熱啟動時間 <1 秒
+- [ ] CHK023 關鍵動畫維持 60 FPS（使用 Performance Overlay）
+- [ ] CHK024 頁面記憶體使用 <150MB（使用 DevTools Memory）
+- [ ] CHK025 使用適當的快取策略減少網路請求
+- [ ] CHK026 影像使用適當格式和尺寸（cached_network_image 等）
+- [ ] CHK027 清單使用 ListView.builder 或類似最佳化
+- [ ] CHK028 使用 `const` 建構函式減少重建
+
+## 文件與規格
+
+- [ ] CHK029 spec.md 中的所有驗收標準已滿足
+- [ ] CHK030 plan.md 中的憲章檢查已通過
+- [ ] CHK031 tasks.md 中的所有任務已完成
+- [ ] CHK032 相關文件已更新（README、API 文件等）
 
 ## Notes
 
@@ -38,3 +73,4 @@
 - Add comments or findings inline
 - Link to relevant resources or documentation
 - Items are numbered sequentially for easy reference
+- This checklist is based on the project constitution at `.specify/memory/constitution.md`
